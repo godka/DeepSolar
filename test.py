@@ -62,7 +62,7 @@ def main():
             act = np.argmax(np.log(action_prob) + noise)
 
             obs, rew, done, info = env.step(act)
-            print(0.1 + act / A_DIM * 0.4)
+            print(0.14 + act / A_DIM * 0.4)
             action_vec = np.zeros(A_DIM)
             action_vec[act] = 1
             a_batch.append(action_vec)

@@ -15,7 +15,7 @@ class Env(object):
         self.state = None
     
     def I(self, t):
-        val = -1. / (720. * 720.) * (t-720) ** 2. + 1.
+        val = -1. / (700. * 700.) * (t-700) ** 2. + 1.
         return val
 
     def Y(self, u_):
@@ -37,32 +37,32 @@ class Env(object):
 
     def reset(self):
         self.t = 2.
-        self.Y(0.1)
+        self.Y(0.14)
         state = np.zeros([S_INFO, S_LEN])
         state[0, -1] = self.y[-1]
         state[1, -1] = self.y[-2]
         state[2, -1] = self.u[-1]
         state[3, -1] = self.u[-2]
-        state[4, -1] = self.t / 1440.
+        state[4, -1] = self.t / 1400.
         self.state = state
         self.t += 1
         return state
 
     def step(self, act):
-        u = 0.1 + act / A_DIM * 0.4
+        u = 0.14 + act / A_DIM * 0.4
         rew = self.Y(u)
         state = np.roll(self.state, -1, axis=1)
         state[0, -1] = self.y[-1]
         state[1, -1] = self.y[-2]
         state[2, -1] = self.u[-1]
         state[3, -1] = self.u[-2]
-        state[4, -1] = self.t / 1440.
+        state[4, -1] = self.t / 1400.
         self.state = state
         self.t += 1
         rew = self.Y(u)
         smo = np.abs(self.u[-1] - self.u[-2])
         done = False
-        if self.t > 1440:
+        if self.t > 1400:
             done = True
         return self.state, rew - u - smo, done, {}
 
