@@ -14,11 +14,13 @@ class Env(object):
         self.y = [0., 0.]
         self.state = None
     
-    def I(self, t):
+    def I(self, t, noise=False):
         val = -1. / (700. * 700.) * (t-700) ** 2. + 1.
+        if noise:
+            val *= np.random.uniform(0.95, 1.05)
         return val
 
-    def Y(self, u_):
+    def Y(self, u_, noise=False):
         self.u.append(u_)
         d = [0.3, 0.6, 2.0, 1.3]
         yt_1 = self.y[-1]
@@ -36,7 +38,7 @@ class Env(object):
         return y_
 
     def reset(self):
-        self.t = 2.
+        self.t = 1.
         self.Y(0.14)
         state = np.zeros([S_INFO, S_LEN])
         state[0, -1] = self.y[-1]
@@ -48,9 +50,11 @@ class Env(object):
         self.t += 1
         return state
 
-    def step(self, act):
+    def step(self, act, tick = None, noise = False):
         u = 0.14 + act / A_DIM * 0.4
-        rew = self.Y(u)
+        if noise:
+            u *= np.random.uniform(0.95, 1.05)
+        rew = self.Y(u, noise)
         state = np.roll(self.state, -1, axis=1)
         state[0, -1] = self.y[-1]
         state[1, -1] = self.y[-2]
@@ -58,13 +62,45 @@ class Env(object):
         state[3, -1] = self.u[-2]
         state[4, -1] = self.t / 1400.
         self.state = state
-        self.t += 1
+        if tick is None:
+            self.t += 1
+        else:
+            self.t = tick
         rew = self.Y(u)
         smo = np.abs(self.u[-1] - self.u[-2])
         done = False
         if self.t > 1400:
             done = True
-        return self.state, rew - u - smo, done, {}
+        info = {}
+        info['y'] = rew
+        info['s'] = [self.y[-1], self.y[-2], self.u[-1], self.u[-2], self.t / 1400.]
+        return self.state, rew - u - smo, done, info
 
+
+    def stepv2(self, act, tick = None, noise = False):
+        u = act
+        if noise:
+            u *= np.random.uniform(0.95, 1.05)
+        rew = self.Y(u, noise)
+        state = np.roll(self.state, -1, axis=1)
+        state[0, -1] = self.y[-1]
+        state[1, -1] = self.y[-2]
+        state[2, -1] = self.u[-1]
+        state[3, -1] = self.u[-2]
+        state[4, -1] = self.t / 1400.
+        self.state = state
+        if tick is None:
+            self.t += 1
+        else:
+            self.t = tick
+        rew = self.Y(u)
+        smo = np.abs(self.u[-1] - self.u[-2])
+        done = False
+        if self.t > 1400:
+            done = True
+        info = {}
+        info['y'] = rew
+        info['s'] = [self.y[-1], self.y[-2], self.u[-1], self.u[-2], self.t / 1400.]
+        return self.state, rew - u - smo, done, info
 
         

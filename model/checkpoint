@@ -1,0 +1,2 @@
+model_checkpoint_path: "/Users/tianchi/git/deepsolar/model/lstm.tfl"
+all_model_checkpoint_paths: "/Users/tianchi/git/deepsolar/model/lstm.tfl"
