@@ -5,7 +5,7 @@ from matplotlib.pyplot import plot, savefig
 import matplotlib
 import sys
 
-labels = ['DeepSolar-1.0', 'Default', 'RobustMPC']
+labels = ['DeepSolar-1.0', 'DeepSolar-1.5', 'Default']
 # SCHEMES = ['sim_rl', 'sim_ppo']
 # labels = ['Buffer-based', 'RobustMPC']
 LW = 2.5
@@ -27,11 +27,17 @@ def main():
         arr.append(float(line))
     f.close()
 
+    arr1 = []
+    f = open('3.csv', 'r')
+    for line in f:
+        arr1.append(float(line))
+    f.close()
+
     arr0 = []
     for p in range(1400):
         arr0.append(U(p))
     
-    ARR = [arr, arr0]
+    ARR = [arr, arr1, arr0]
     plt.rcParams['axes.labelsize'] = 16
     font = {'size': 14}
     matplotlib.rc('font', **font)
@@ -59,7 +65,7 @@ def main():
     # plt.xlim(0.25, 2.5)
     ax.spines['bottom'].set_linewidth(2)
     ax.spines['left'].set_linewidth(2)
-    plt.ylim(0., 0.8)
+    plt.ylim(0., 1.0)
     plt.ylabel('U')
     # plt.grid(True, axis='y')
     plt.xlabel('Time')

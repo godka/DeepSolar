@@ -55,7 +55,7 @@ def main():
     print(np.mean(r_batch), np.mean(arr0), np.mean(np.abs(np.diff(arr0))))
 
     arr = []
-    f = open('2.csv', 'r')
+    f = open('3.csv', 'r')
     for line in f:
         arr.append(float(line))
     f.close()
