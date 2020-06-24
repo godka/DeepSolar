@@ -1,6 +1,6 @@
 # DeepSolar
 
-View technical report [here](deepsolar.pdf).
+View technical report [here](https://github.com/godka/DeepSolar/blob/master/DeepSolar.pdf).
 
 Final project for the course: intelligent control.
 
